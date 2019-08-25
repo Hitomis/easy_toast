@@ -9,6 +9,7 @@ class EasyToast {
   EasyToast._internal();
 
   static EasyToast _singleton = EasyToast._internal();
+  static const animationTimes = 200;
 
   factory EasyToast() => _singleton;
 
@@ -29,7 +30,6 @@ class EasyToast {
 
   void loading(
     BuildContext context, [
-    Duration duration = const Duration(seconds: 2),
     Alignment alignment = Alignment.center,
   ]) {
     hide();
@@ -37,31 +37,104 @@ class EasyToast {
     Overlay.of(context).insert(_overlayEntry);
   }
 
-  void normal(
+  void toast(
     BuildContext context,
     String message, [
-    Duration duration = const Duration(seconds: 2),
+    Duration duration = const Duration(milliseconds: 2000),
     Alignment alignment = Alignment.bottomCenter,
   ]) {
-    hide();
-    _overlayEntry = OverlayEntry(
-        builder: (context) => ToastView(
-              text: message,
-              alignment: alignment,
-            ));
-    Overlay.of(context).insert(_overlayEntry);
-    _timer = Timer(duration, () => hide());
+    var toast = ToastView(
+      text: message,
+      alignment: alignment,
+    );
+    _showToast(context, duration, toast);
   }
 
-  void success() {}
+  void success(
+    BuildContext context,
+    String message, [
+    Duration duration = const Duration(milliseconds: 2000),
+    Alignment alignment = Alignment.center,
+  ]) {
+    var toast = ToastView(
+      text: message,
+      alignment: alignment,
+      image: Image.asset(
+        "assets/image/icon_success.png",
+        width: 70,
+        height: 70,
+        package: "easy_toast",
+      ),
+    );
+    _showToast(context, duration, toast);
+  }
 
-  void error() {}
+  void error(
+    BuildContext context,
+    String message, [
+    Duration duration = const Duration(milliseconds: 2000),
+    Alignment alignment = Alignment.center,
+  ]) {
+    var toast = ToastView(
+      text: message,
+      alignment: alignment,
+      image: Image.asset(
+        "assets/image/icon_error.png",
+        width: 70,
+        height: 70,
+        package: "easy_toast",
+      ),
+    );
+    _showToast(context, duration, toast);
+  }
 
-  void info() {}
+  void fail(
+      BuildContext context,
+      String message, [
+        Duration duration = const Duration(milliseconds: 2000),
+        Alignment alignment = Alignment.center,
+      ]) {
+    var toast = ToastView(
+      text: message,
+      alignment: alignment,
+      image: Image.asset(
+        "assets/image/icon_fail.png",
+        width: 70,
+        height: 70,
+        package: "easy_toast",
+      ),
+    );
+    _showToast(context, duration, toast);
+  }
 
-  void warning() {}
+  void info(
+    BuildContext context,
+    String message, [
+    Duration duration = const Duration(milliseconds: 2000),
+    Alignment alignment = Alignment.center,
+  ]) {
+    var toast = ToastView(
+      text: message,
+      alignment: alignment,
+      image: Image.asset(
+        "assets/image/icon_info.png",
+        width: 70,
+        height: 70,
+        package: "easy_toast",
+      ),
+    );
+    _showToast(context, duration, toast);
+  }
 
   void custom() {}
+
+  void _showToast(BuildContext context, Duration duration, Widget toastView) {
+    hide();
+    _overlayEntry = OverlayEntry(builder: (context) => toastView);
+    Overlay.of(context).insert(_overlayEntry);
+    duration = duration + const Duration(milliseconds: animationTimes * 2);
+    _timer = Timer(duration, () => hide());
+  }
 }
 
 final easyToast = EasyToast();

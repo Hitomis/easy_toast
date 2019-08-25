@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text("测试", style: TextStyle(color: Colors.white),),
               ),
               onPressed: () {
-                easyToast.normal(context, "fsdfjlsf;sdjfsjdfjlksfjlsjfljslfjlsfsjdflslfslfsjfdjfjjjsdjfsjdfjlksfjlsjfljslfjlsfsjdflslfslfsjfdjfjjjsdjfsjdfjlksfjlsjfljslfjlsfsjdflslfslfsjfdjfjjjsdjfsjdfjlksfjlsjfljslfjlsfsjdflslfslfsjfdjfjjjsdjfsjdfjlksfjlsjfljslfjlsfsjdflslfslfsjfdjfjjj");
+                easyToast.info(context, "A easy toast!!!");
               },
             )),
       ),
