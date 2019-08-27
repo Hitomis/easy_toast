@@ -9,10 +9,11 @@ import 'package:flutter/material.dart';
 ///
 
 class FadeAnimation extends StatefulWidget {
-  FadeAnimation(this.child);
-
-  //  final ToastConfig config;
   final Widget child;
+
+  const FadeAnimation({Key key, this.child})
+      : assert(child != null),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _FadeAnimationState();

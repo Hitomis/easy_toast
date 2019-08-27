@@ -3,10 +3,14 @@ library easy_toast;
 import 'dart:async';
 
 import 'package:easy_toast/toast/toast_view.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+
+import 'toast/toast_config.dart';
 
 class EasyToast {
-  EasyToast._internal();
+  EasyToast._internal() {
+    init();
+  }
 
   static EasyToast _singleton = EasyToast._internal();
   static const animationTimes = 200;
@@ -15,6 +19,25 @@ class EasyToast {
 
   OverlayEntry _overlayEntry;
   Timer _timer;
+
+  ToastConfig config;
+
+  void init([ToastConfig config]) {
+    this.config = ToastConfig();
+    this.config
+      ..horPadding = config?.horPadding ?? 12
+      ..verPadding = config?.verPadding ?? 12
+      ..horMargin = config?.horMargin ?? 20
+      ..verMargin = config?.verMargin ?? 30
+      ..space = config?.space ?? 8
+      ..radius = config?.radius ?? 8
+      ..iconWidth = config?.iconWidth ?? 70
+      ..iconHeight = config?.iconHeight ?? 70
+      ..fontSize = config?.fontSize ?? 16
+      ..fontColor = config?.fontColor ?? Colors.white
+      ..backgroundColor = config?.backgroundColor ?? const Color.fromRGBO(0, 0, 0, 0.7)
+      ..animType = config?.animType ?? ToastAnim.translate;
+  }
 
   void hide() {
     if (_overlayEntry != null) {
@@ -45,6 +68,7 @@ class EasyToast {
   ]) {
     var toast = ToastView(
       text: message,
+      config: config,
       alignment: alignment,
     );
     _showToast(context, duration, toast);
@@ -53,18 +77,21 @@ class EasyToast {
   void success(
     BuildContext context,
     String message, [
+    Widget image,
     Duration duration = const Duration(milliseconds: 2000),
     Alignment alignment = Alignment.center,
   ]) {
     var toast = ToastView(
       text: message,
+      config: config,
       alignment: alignment,
-      image: Image.asset(
-        "assets/image/icon_success.png",
-        width: 70,
-        height: 70,
-        package: "easy_toast",
-      ),
+      image: image ??
+          Image.asset(
+            "assets/image/icon_success.png",
+            width: config.iconWidth,
+            height: config.iconHeight,
+            package: "easy_toast",
+          ),
     );
     _showToast(context, duration, toast);
   }
@@ -72,16 +99,18 @@ class EasyToast {
   void error(
     BuildContext context,
     String message, [
+    Widget image,
     Duration duration = const Duration(milliseconds: 2000),
     Alignment alignment = Alignment.center,
   ]) {
     var toast = ToastView(
       text: message,
+      config: config,
       alignment: alignment,
       image: Image.asset(
         "assets/image/icon_error.png",
-        width: 70,
-        height: 70,
+        width: config.iconWidth,
+        height: config.iconHeight,
         package: "easy_toast",
       ),
     );
@@ -89,18 +118,20 @@ class EasyToast {
   }
 
   void fail(
-      BuildContext context,
-      String message, [
-        Duration duration = const Duration(milliseconds: 2000),
-        Alignment alignment = Alignment.center,
-      ]) {
+    BuildContext context,
+    String message, [
+    Widget image,
+    Duration duration = const Duration(milliseconds: 2000),
+    Alignment alignment = Alignment.center,
+  ]) {
     var toast = ToastView(
       text: message,
+      config: config,
       alignment: alignment,
       image: Image.asset(
         "assets/image/icon_fail.png",
-        width: 70,
-        height: 70,
+        width: config.iconWidth,
+        height: config.iconHeight,
         package: "easy_toast",
       ),
     );
@@ -110,23 +141,33 @@ class EasyToast {
   void info(
     BuildContext context,
     String message, [
+    Widget image,
     Duration duration = const Duration(milliseconds: 2000),
     Alignment alignment = Alignment.center,
   ]) {
     var toast = ToastView(
       text: message,
+      config: config,
       alignment: alignment,
       image: Image.asset(
         "assets/image/icon_info.png",
-        width: 70,
-        height: 70,
+        width: config.iconWidth,
+        height: config.iconHeight,
         package: "easy_toast",
       ),
     );
     _showToast(context, duration, toast);
   }
 
-  void custom() {}
+  void custom(
+    BuildContext context,
+    Widget toast, [
+    Widget image,
+    Duration duration = const Duration(milliseconds: 2000),
+    Alignment alignment = Alignment.center,
+  ]) {
+    _showToast(context, duration, toast);
+  }
 
   void _showToast(BuildContext context, Duration duration, Widget toastView) {
     hide();

@@ -1,8 +1,9 @@
 import 'package:easy_toast/toast/anima/fade_animation.dart';
 import 'package:easy_toast/toast/anima/translate_animation.dart';
+import 'package:easy_toast/toast/toast_config.dart';
 import 'package:flutter/material.dart';
 
-import 'anima/rotate_animation.dart';
+import 'anima/flip_animation.dart';
 import 'anima/scale_animation.dart';
 
 ///
@@ -10,26 +11,20 @@ import 'anima/scale_animation.dart';
 /// date: 2019-08-16
 ///
 
-enum ToastType { loading, success, error, info, warning, custom }
-
 class ToastView extends StatefulWidget {
   ToastView({
-    this.text,
+    @required this.text,
+    @required this.config,
     this.image,
-    this.space,
-    this.bgColor,
-    this.alignment,
-    this.border,
     this.custom,
+    this.alignment,
   });
 
   final String text;
+  final ToastConfig config;
   final Image image;
-  final double space;
-  final Color bgColor;
-  final Alignment alignment;
-  final BorderRadiusGeometry border;
   final Widget custom;
+  final Alignment alignment;
 
   @override
   State<StatefulWidget> createState() => _ToastViewState();
@@ -44,56 +39,77 @@ class _ToastViewState extends State<ToastView> with SingleTickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: widget.alignment,
+      alignment: widget.alignment ?? Alignment.bottomCenter,
       child: Container(
         margin: _smartEdge(),
-        child: widget.custom ??
-            RotateAnimation(child :Container(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(0, 0, 0, 0.7),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: widget.image == null ? _buildTextToast() : _buildImageToast(),
-            )),
+        child: widget.custom ?? _warpAnimation(),
       ),
     );
   }
 
+  Widget _warpAnimation() {
+    switch (widget.config.animType) {
+      case ToastAnim.fade:
+        return FadeAnimation(child: _buildToastContent());
+      case ToastAnim.flip:
+        return FlipAnimation(child: _buildToastContent());
+      case ToastAnim.scale:
+        return ScaleAnimation(child: _buildToastContent());
+      case ToastAnim.translate:
+        return TranslateAnimation(child: _buildToastContent());
+      default:
+        return FadeAnimation(child: _buildToastContent());
+    }
+  }
+
+  Widget _buildToastContent() => Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: widget.config.horMargin,
+          vertical: widget.config.verMargin,
+        ),
+        decoration: BoxDecoration(
+          color: widget.config.backgroundColor,
+          borderRadius: BorderRadius.circular(widget.config.radius),
+        ),
+        child: widget.image == null ? _buildTextToast() : _buildImageToast(),
+      );
+
   Widget _buildImageToast() => Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisSize: MainAxisSize.min,
-    children: <Widget>[
-      widget.image,
-      SizedBox(height: 8),
-      _buildTextToast(),
-    ],
-  );
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          widget.image,
+          SizedBox(height: widget.config.space),
+          _buildTextToast(),
+        ],
+      );
 
   Widget _buildTextToast() => Text(
-    widget.text ?? "",
-    textAlign: TextAlign.center,
-    style: const TextStyle(
-      color: Colors.white,
-      fontSize: 16,
-      decoration: TextDecoration.none,
-    ),
-  );
+        widget.text ?? "",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: widget.config.fontColor,
+          fontSize: widget.config.fontSize,
+          decoration: TextDecoration.none,
+        ),
+      );
 
   EdgeInsetsGeometry _smartEdge() {
     var alignment = widget.alignment;
-    var space = widget.space;
+    var verMargin = widget.config.verMargin;
+    var horMargin = widget.config.horMargin;
     if (alignment == Alignment.topCenter ||
         alignment == Alignment.topLeft ||
         alignment == Alignment.topRight) {
-      return EdgeInsets.only(top: space ?? 30, left: 20, right: 20);
-    } else if (alignment == Alignment.bottomCenter ||
+      return EdgeInsets.only(top: verMargin, left: horMargin, right: horMargin);
+    } else if (alignment == null ||
+        alignment == Alignment.bottomCenter ||
         alignment == Alignment.bottomLeft ||
         alignment == Alignment.bottomRight) {
-      return EdgeInsets.only(bottom: space ?? 30, left: 20, right: 20);
+      return EdgeInsets.only(bottom: verMargin, left: horMargin, right: horMargin);
     } else {
-      return EdgeInsets.symmetric(horizontal: 20);
+      return EdgeInsets.symmetric(horizontal: horMargin);
     }
   }
 }

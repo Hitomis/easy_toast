@@ -9,20 +9,20 @@ import 'support//transform.dart' as matrix;
 /// date: 2019-08-24
 ///
 
-class RotateAnimation extends StatefulWidget {
+class FlipAnimation extends StatefulWidget {
   final Widget child;
 
-  const RotateAnimation({Key key, this.child})
+  const FlipAnimation({Key key, this.child})
       : assert(child != null),
         super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _RotateAnimationState();
+  State<StatefulWidget> createState() => _FlipAnimationState();
 }
 
-class _RotateAnimationState extends State<RotateAnimation> with SingleTickerProviderStateMixin {
+class _FlipAnimationState extends State<FlipAnimation> with SingleTickerProviderStateMixin {
   AnimationController _control;
-  Animation<double> _rotate;
+  Animation<double> _flip;
   Animation<Offset> _translate;
   Animation<double> _opacity;
 
@@ -33,7 +33,7 @@ class _RotateAnimationState extends State<RotateAnimation> with SingleTickerProv
       vsync: this,
     );
     var animation = CurvedAnimation(parent: _control, curve: Curves.linear);
-    _rotate = Tween<double>(begin: 0, end: 2 * pi).animate(animation);
+    _flip = Tween<double>(begin: -pi, end: 0).animate(animation);
     _translate = Tween<Offset>(begin: Offset(0, 100), end: Offset(0, 0)).animate(animation);
     _opacity = Tween<double>(begin: 0, end: 1).animate(animation);
     Future.delayed(const Duration(milliseconds: 2000), () {
@@ -59,7 +59,7 @@ class _RotateAnimationState extends State<RotateAnimation> with SingleTickerProv
         return Transform.translate(
           offset: _translate.value,
           child: matrix.Transform.rotate(
-            angle: _rotate.value,
+            angle: _flip.value,
             child: Opacity(
               opacity: _opacity.value,
               child: child,
