@@ -88,7 +88,27 @@ class _ToastViewState extends State<ToastView> with SingleTickerProviderStateMix
         child: widget.image == null ? _buildTextToast() : _buildImageToast(),
       );
     } else {
-      return widget.loading;
+      return Container(
+        constraints: BoxConstraints(
+          minWidth: widget.config.loadingWidth,
+          minHeight: widget.config.loadingHeight
+        ),
+        padding: EdgeInsets.symmetric(
+            horizontal: widget.config.horPadding, vertical: widget.config.verPadding),
+        decoration: BoxDecoration(
+          color: widget.config.backgroundColor,
+          borderRadius: BorderRadius.circular(widget.config.radius),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            widget.loading,
+            SizedBox(height: widget.config.space),
+            _buildTextToast(),
+          ],
+        ),
+      );
     }
   }
 

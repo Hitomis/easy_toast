@@ -17,6 +17,8 @@ class ToastConfig {
   double iconWidth;
   double iconHeight;
   double fontSize;
+  double loadingWidth;
+  double loadingHeight;
   Color fontColor;
   Color backgroundColor;
   ToastAnim animType;

@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               _buildButton("show loading", () {
-                easyToast.loading(context);
+                easyToast.loading(context, message: "loading...");
               }),
               _buildButton("hide loading", () {
                 easyToast.hide();

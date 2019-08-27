@@ -33,6 +33,8 @@ class EasyToast {
       ..radius = config?.radius ?? 8
       ..iconWidth = config?.iconWidth ?? 70
       ..iconHeight = config?.iconHeight ?? 70
+      ..loadingWidth = config?.loadingWidth ?? 100
+      ..loadingHeight = config?.loadingHeight ?? 100
       ..fontSize = config?.fontSize ?? 16
       ..fontColor = config?.fontColor ?? Colors.white
       ..backgroundColor = config?.backgroundColor ?? const Color.fromRGBO(0, 0, 0, 0.7)
@@ -53,11 +55,13 @@ class EasyToast {
 
   void loading(
     BuildContext context, {
+    String message,
     Widget loadingWidget,
     Alignment alignment = Alignment.center,
   }) {
     var toast = ToastView(
-      loading: loadingWidget ?? CircularProgressIndicator(),
+      text: message,
+      loading: loadingWidget ?? SizedBox(width: 40, height: 40, child: CircularProgressIndicator()),
       config: config,
       alignment: alignment,
     );
