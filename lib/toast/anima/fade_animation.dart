@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:easy_toast/easy_toast.dart';
+import 'package:easy_toast/toast/anima/base_animation.dart';
 import 'package:flutter/material.dart';
 
 ///
@@ -8,12 +9,12 @@ import 'package:flutter/material.dart';
 /// date: 2019-08-23
 ///
 
-class FadeAnimation extends StatefulWidget {
+class FadeAnimation extends BaseAnimation {
   final Widget child;
 
-  const FadeAnimation({Key key, this.child})
+  FadeAnimation({Key key, bool isLoading: false, this.child})
       : assert(child != null),
-        super(key: key);
+        super(key: key, isLoading: isLoading);
 
   @override
   State<StatefulWidget> createState() => _FadeAnimationState();
@@ -33,11 +34,13 @@ class _FadeAnimationState extends State<FadeAnimation> with SingleTickerProvider
       parent: _control,
       curve: Curves.linear,
     ));
-    Future.delayed(const Duration(milliseconds: 2000), () {
-      try {
-        _control.reverse();
-      } catch (_) {}
-    });
+    if (!widget.isLoading) {
+      Future.delayed(const Duration(milliseconds: 2000), () {
+        try {
+          _control.reverse();
+        } catch (_) {}
+      });
+    }
     _control.forward();
     super.initState();
   }

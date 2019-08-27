@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
 import '../../easy_toast.dart';
+import 'base_animation.dart';
 import 'support//transform.dart' as matrix;
 
 ///
@@ -9,12 +11,12 @@ import 'support//transform.dart' as matrix;
 /// date: 2019-08-24
 ///
 
-class FlipAnimation extends StatefulWidget {
+class FlipAnimation extends BaseAnimation {
   final Widget child;
 
-  const FlipAnimation({Key key, this.child})
+  FlipAnimation({Key key, bool isLoading: false, this.child})
       : assert(child != null),
-        super(key: key);
+        super(key: key, isLoading: isLoading);
 
   @override
   State<StatefulWidget> createState() => _FlipAnimationState();
@@ -36,11 +38,13 @@ class _FlipAnimationState extends State<FlipAnimation> with SingleTickerProvider
     _flip = Tween<double>(begin: -pi, end: 0).animate(animation);
     _translate = Tween<Offset>(begin: Offset(0, 100), end: Offset(0, 0)).animate(animation);
     _opacity = Tween<double>(begin: 0, end: 1).animate(animation);
-    Future.delayed(const Duration(milliseconds: 2000), () {
-      try {
-        _control.reverse();
-      } catch (_) {}
-    });
+    if (!widget.isLoading) {
+      Future.delayed(const Duration(milliseconds: 2000), () {
+        try {
+          _control.reverse();
+        } catch (_) {}
+      });
+    }
     _control.forward();
     super.initState();
   }

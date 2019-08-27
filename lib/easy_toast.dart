@@ -36,7 +36,7 @@ class EasyToast {
       ..fontSize = config?.fontSize ?? 16
       ..fontColor = config?.fontColor ?? Colors.white
       ..backgroundColor = config?.backgroundColor ?? const Color.fromRGBO(0, 0, 0, 0.7)
-      ..animType = config?.animType ?? ToastAnim.translate;
+      ..animType = config?.animType ?? ToastAnim.fade;
   }
 
   void hide() {
@@ -52,20 +52,26 @@ class EasyToast {
   }
 
   void loading(
-    BuildContext context, [
+    BuildContext context, {
+    Widget loadingWidget,
     Alignment alignment = Alignment.center,
-  ]) {
+  }) {
+    var toast = ToastView(
+      loading: loadingWidget ?? CircularProgressIndicator(),
+      config: config,
+      alignment: alignment,
+    );
     hide();
-    _overlayEntry = OverlayEntry(builder: (context) => null);
+    _overlayEntry = OverlayEntry(builder: (context) => toast);
     Overlay.of(context).insert(_overlayEntry);
   }
 
   void toast(
     BuildContext context,
-    String message, [
+    String message, {
     Duration duration = const Duration(milliseconds: 2000),
     Alignment alignment = Alignment.bottomCenter,
-  ]) {
+  }) {
     var toast = ToastView(
       text: message,
       config: config,
@@ -76,11 +82,11 @@ class EasyToast {
 
   void success(
     BuildContext context,
-    String message, [
+    String message, {
     Widget image,
     Duration duration = const Duration(milliseconds: 2000),
     Alignment alignment = Alignment.center,
-  ]) {
+  }) {
     var toast = ToastView(
       text: message,
       config: config,
@@ -98,11 +104,11 @@ class EasyToast {
 
   void error(
     BuildContext context,
-    String message, [
+    String message, {
     Widget image,
     Duration duration = const Duration(milliseconds: 2000),
     Alignment alignment = Alignment.center,
-  ]) {
+  }) {
     var toast = ToastView(
       text: message,
       config: config,
@@ -119,11 +125,11 @@ class EasyToast {
 
   void fail(
     BuildContext context,
-    String message, [
+    String message, {
     Widget image,
     Duration duration = const Duration(milliseconds: 2000),
     Alignment alignment = Alignment.center,
-  ]) {
+  }) {
     var toast = ToastView(
       text: message,
       config: config,
@@ -140,11 +146,11 @@ class EasyToast {
 
   void info(
     BuildContext context,
-    String message, [
+    String message, {
     Widget image,
     Duration duration = const Duration(milliseconds: 2000),
     Alignment alignment = Alignment.center,
-  ]) {
+  }) {
     var toast = ToastView(
       text: message,
       config: config,
@@ -161,11 +167,16 @@ class EasyToast {
 
   void custom(
     BuildContext context,
-    Widget toast, [
+    Widget toastWidget, {
     Widget image,
     Duration duration = const Duration(milliseconds: 2000),
-    Alignment alignment = Alignment.center,
-  ]) {
+    Alignment alignment = Alignment.bottomCenter,
+  }) {
+    var toast = ToastView(
+      config: config,
+      alignment: alignment,
+      custom: toastWidget,
+    );
     _showToast(context, duration, toast);
   }
 

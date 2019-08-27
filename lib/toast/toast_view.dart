@@ -13,10 +13,11 @@ import 'anima/scale_animation.dart';
 
 class ToastView extends StatefulWidget {
   ToastView({
-    @required this.text,
     @required this.config,
+    this.text,
     this.image,
     this.custom,
+    this.loading,
     this.alignment,
   });
 
@@ -24,6 +25,7 @@ class ToastView extends StatefulWidget {
   final ToastConfig config;
   final Image image;
   final Widget custom;
+  final Widget loading;
   final Alignment alignment;
 
   @override
@@ -32,17 +34,12 @@ class ToastView extends StatefulWidget {
 
 class _ToastViewState extends State<ToastView> with SingleTickerProviderStateMixin {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Align(
       alignment: widget.alignment ?? Alignment.bottomCenter,
       child: Container(
         margin: _smartEdge(),
-        child: widget.custom ?? _warpAnimation(),
+        child: _warpAnimation(),
       ),
     );
   }
@@ -50,22 +47,39 @@ class _ToastViewState extends State<ToastView> with SingleTickerProviderStateMix
   Widget _warpAnimation() {
     switch (widget.config.animType) {
       case ToastAnim.fade:
-        return FadeAnimation(child: _buildToastContent());
+        return FadeAnimation(
+          child: widget.custom ?? _buildToastContent(),
+          isLoading: widget.loading != null,
+        );
       case ToastAnim.flip:
-        return FlipAnimation(child: _buildToastContent());
+        return FlipAnimation(
+          child: widget.custom ?? _buildToastContent(),
+          isLoading: widget.loading != null,
+        );
       case ToastAnim.scale:
-        return ScaleAnimation(child: _buildToastContent());
+        return ScaleAnimation(
+          child: widget.custom ?? _buildToastContent(),
+          isLoading: widget.loading != null,
+        );
       case ToastAnim.translate:
-        return TranslateAnimation(child: _buildToastContent());
+        return TranslateAnimation(
+          child: widget.custom ?? _buildToastContent(),
+          isLoading: widget.loading != null,
+        );
       default:
-        return FadeAnimation(child: _buildToastContent());
+        return FadeAnimation(
+          child: widget.custom ?? _buildToastContent(),
+          isLoading: widget.loading != null,
+        );
     }
   }
 
-  Widget _buildToastContent() => Container(
+  Widget _buildToastContent() {
+    if (widget.loading == null) {
+      return Container(
         padding: EdgeInsets.symmetric(
-          horizontal: widget.config.horMargin,
-          vertical: widget.config.verMargin,
+          horizontal: widget.config.horPadding,
+          vertical: widget.config.verPadding,
         ),
         decoration: BoxDecoration(
           color: widget.config.backgroundColor,
@@ -73,6 +87,10 @@ class _ToastViewState extends State<ToastView> with SingleTickerProviderStateMix
         ),
         child: widget.image == null ? _buildTextToast() : _buildImageToast(),
       );
+    } else {
+      return widget.loading;
+    }
+  }
 
   Widget _buildImageToast() => Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -27,7 +27,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,24 +34,78 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title: const Text('Easy toast example app'),
         ),
-        body: Center(
-            child: CupertinoButton(
-              pressedOpacity: 0.7,
-              child: Container(
-                width: 120,
-                height: 46,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.cyan,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text("测试", style: TextStyle(color: Colors.white),),
-              ),
-              onPressed: () {
+        body: SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              _buildButton("show loading", () {
+                easyToast.loading(context);
+              }),
+              _buildButton("hide loading", () {
+                easyToast.hide();
+              }),
+              _buildButton("text", () {
+                easyToast.toast(context, "A easy toast!!!");
+              }),
+              _buildButton("success", () {
+                easyToast.success(context, "A easy toast!!!");
+              }),
+              _buildButton("error", () {
+                easyToast.error(context, "A easy toast!!!");
+              }),
+              _buildButton("info", () {
                 easyToast.info(context, "A easy toast!!!");
-              },
-            )),
+              }),
+              _buildButton("fail", () {
+                easyToast.fail(context, "A easy toast!!!");
+              }),
+              _buildButton("custom", () {
+                easyToast.custom(
+                  context,
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(120, 81, 255, 0.6),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      "这是自定义的toast",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        ),
       ),
     );
   }
+
+  Widget _buildButton(String text, VoidCallback onPressed) => CupertinoButton(
+        pressedOpacity: 0.7,
+        padding: EdgeInsets.symmetric(vertical: 10),
+        child: Container(
+          width: 240,
+          height: 46,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: Colors.cyan,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            text,
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        onPressed: onPressed,
+      );
 }

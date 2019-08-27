@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../../easy_toast.dart';
+import 'base_animation.dart';
 
 ///
 /// author：Vans Z
 /// date： 2019-08-24
 ///
 
-class TranslateAnimation extends StatefulWidget {
+class TranslateAnimation extends BaseAnimation {
   final Widget child;
 
-  const TranslateAnimation({Key key, this.child})
+  TranslateAnimation({Key key, bool isLoading: false, this.child})
       : assert(child != null),
-        super(key: key);
+        super(key: key, isLoading: isLoading);
 
   @override
   _TranslateAnimationState createState() => _TranslateAnimationState();
@@ -33,11 +34,13 @@ class _TranslateAnimationState extends State<TranslateAnimation>
     var animation = CurvedAnimation(parent: _control, curve: Curves.linear);
     _translate = Tween<Offset>(begin: Offset(0, 40), end: Offset(0, 0)).animate(animation);
     _opacity = Tween<double>(begin: 0, end: 1).animate(animation);
-    Future.delayed(const Duration(milliseconds: 1800), () {
-      try {
-        _control.reverse();
-      } catch (_) {}
-    });
+    if (!widget.isLoading) {
+      Future.delayed(const Duration(milliseconds: 1800), () {
+        try {
+          _control.reverse();
+        } catch (_) {}
+      });
+    }
     _control.forward();
     super.initState();
   }
